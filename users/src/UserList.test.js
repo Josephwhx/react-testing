@@ -7,10 +7,15 @@ test('render one row per user', () => {
         {name: 'jane', email: 'jane@jane.com'},
         {name: 'sam', email: 'sam@sam.com'}
     ];
-    render(<UserList users={users}/>);
+    const {container} = render(<UserList users={users}/>);
 
     // Find all the rows in the table
-    const rows = within(screen.getByTestId('users')).getAllByRole('row');
+    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+    const rows = container.querySelectorAll('tbody tr');
+
+    // using data-testid
+    //--------------------------------------
+    // const rows = within(screen.getByTestId('users')).getAllByRole('row');
 
     // Assertion: correct number of rows in the table
     expect(rows).toHaveLength(2);
