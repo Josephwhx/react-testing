@@ -21,7 +21,7 @@ test('it calls onUserAdd when the form is submitted', async () => {
     const mock = jest.fn();
     const user = userEvent.setup();
     // render component
-    render(<UserForm onUserAdd={jest.fn()}/>);
+    render(<UserForm onUserAdd={mock}/>);
 
     // Find the two inputs
     const nameInput = screen.getByRole('textbox', {name: 'Name'});
@@ -42,6 +42,27 @@ test('it calls onUserAdd when the form is submitted', async () => {
     await user.click(button);
 
     // Assertion to make sure 'onUserAdd' is called
-    expect(mock).toHaveBeenCalled(1);
+    expect(mock).toHaveBeenCalled();
     expect(mock).toHaveBeenCalledWith({name: 'asdf', email: 'asdf@email.com'});
+});
+
+test('empties the two inputs when form is submitted', async () => {
+    
+    const user = userEvent.setup();
+    render(<UserForm onUserAdd={jest.fn()}/>);
+
+    const nameInput = screen.getByRole('textbox', {name: /name/i});
+    const emailInput = screen.getByRole('textbox', {name: /email/i});
+    const button = screen.getByRole('button');
+
+    await user.clear(nameInput);
+    await user.type(nameInput, 'jane');
+    await user.clear(emailInput);
+    await user.type(emailInput, 'jane@jane.com');
+
+    await user.click(button);
+
+    expect(nameInput).toHaveValue('');
+    expect(emailInput).toHaveValue('');
+
 });
